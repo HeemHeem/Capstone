@@ -1,1 +1,12 @@
 /* For Prettying up the page. Will be included in index.html */
+#videos{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2em;
+}
+
+.video-player{
+    background-color: black;
+    width: 100%;
+    height: 300px;
+}
