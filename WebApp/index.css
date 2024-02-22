@@ -3,6 +3,8 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2em;
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
 }
 
 .video-player{
