@@ -48,17 +48,9 @@ myPeer.on('open', id => {
 })
 
 
-// play video 
-function addVideoStream(video, stream){
-    video.srcObject = stream
-    video.addEventListener('loadedmetadata', () => {
-        video.play()
-    })
-    videoGrid.append(video)
-}
-
-function connectToNewUser(userID, stream){
-    const call = myPeer.call(userID, stream)
+function connectToNewUser(userId, stream){
+    const call = myPeer.call(userId, stream)
+    const video = document.createElement('video')
     call.on('stream', userVideoStream => {
         addVideoStream(video, userVideoStream)
     }) // take in other user stream
@@ -70,4 +62,12 @@ function connectToNewUser(userID, stream){
 
     // ever user is now connected to a call you make
     peers[userId] = call
+}
+// play video 
+function addVideoStream(video, stream){
+    video.srcObject = stream
+    video.addEventListener('loadedmetadata', () => {
+        video.play()
+    })
+    videoGrid.append(video)
 }
