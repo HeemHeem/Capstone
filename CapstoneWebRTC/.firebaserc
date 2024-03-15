@@ -1,6 +1,7 @@
 {
   "projects": {
-    "default": "capstone-firebase-rtc"
+    "default": "capstone-video-calling",
+    "staging": "capstone-video-calling"
   },
   "targets": {},
   "etags": {}
