@@ -24,13 +24,27 @@ function init() {
   document.querySelector('#createBtn').addEventListener('click', createRoom);
   document.querySelector('#joinBtn').addEventListener('click', joinRoom);
   roomDialog = new mdc.dialog.MDCDialog(document.querySelector('#room-dialog'));
+  // turnOffPeerCamera();
+  // addEventListener('signalingstatechange', turnOffPeerCamera);
+  //     peerConnection.addEventListener('signalingstatechange', () => {
+  //   document.querySelector('#remoteVideo').srcObject = null;
+  // });
 }
+
+async function turnOffPeerCamera(){
+
+  peerConnection.addEventListener("signalingstatechange", () => {
+    document.querySelector('#remoteVideo').srcObject = null;
+  })
+
+}
+
 
 async function createRoom() {
   document.querySelector('#createBtn').disabled = true;
   document.querySelector('#joinBtn').disabled = true;
   const db = firebase.firestore();
-  const roomRef = await db.collection('rooms').doc();
+  const roomRef = await db.collection('rooms').doc("Telephone");
 
   console.log('Create PeerConnection with configuration: ', configuration);
   peerConnection = new RTCPeerConnection(configuration);
@@ -102,6 +116,17 @@ async function createRoom() {
     });
   });
   // Listen for remote ICE candidates above
+
+
+// Turn off remote stream when callee disconnects
+  roomRef.collection('calleeCandidates').onSnapshot(snapshot => {
+    snapshot.docChanges().forEach(async change => {
+      if (change.type === 'removed') {
+        document.querySelector('#remoteVideo').srcObject = null;
+      }
+    });
+  });
+
 }
 
 function joinRoom() {
@@ -182,6 +207,14 @@ async function joinRoomById(roomId) {
     });
     // Listening for remote ICE candidates above
   }
+    // Turn off remote stream when caller disconnects
+    roomRef.collection('calleeCandidates').onSnapshot(snapshot => {
+      snapshot.docChanges().forEach(async change => {
+        if (change.type === 'removed') {
+          document.querySelector('#remoteVideo').srcObject = null;
+        }
+      });
+    });
 }
 
 async function openUserMedia(e) {
@@ -207,6 +240,7 @@ async function hangUp(e) {
 
   if (remoteStream) {
     remoteStream.getTracks().forEach(track => track.stop());
+    // document.querySelector('#remoteVideo').srcObject=null;
   }
 
   if (peerConnection) {
@@ -257,6 +291,9 @@ function registerPeerConnectionListeners() {
     console.log(
         `ICE connection state change: ${peerConnection.iceConnectionState}`);
   });
+
+
+
 }
 
 init();
