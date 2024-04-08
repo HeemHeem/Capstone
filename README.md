@@ -21,17 +21,17 @@
 8.  To deploy the project online and use it on the web you will need to use ```firebase deploy```
 
 9.  You will then be prompted to launch the website, which in our case is this:
-                    ```
+                    
                         https://capstone-video-calling.web.app/
-                    ```
+                    
     NOTE: THIS LINK NAME MIGHT CHANGE DEPENDING ON WHAT WE WOULD LIKE TO CALL THE APP
 
 
 
 This project was based off of the webRTC and firebase codelab. For more information checkout this link:
-                    ```
+                    
                     https://webrtc.org/getting-started/firebase-rtc-codelab
-                    ```
+                    
 
 
 ********************************************** DISCLAIMER ***************************************
