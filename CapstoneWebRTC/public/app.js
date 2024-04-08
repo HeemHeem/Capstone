@@ -124,18 +124,18 @@ async function createRoom() {
 
 
 // Turn off remote stream when callee disconnects
-  // roomRef.collection('calleeCandidates').onSnapshot(snapshot => {
-  //   snapshot.docChanges().forEach(async change => {
-  //     if (change.type === 'removed') {
-  //       document.querySelector('#remoteVideo').srcObject = null;
-  //     }
-  //   });
-  // });
-  peerConnection.addEventListener("connectionstatechange", () =>{
-    if(peerConnection.connectionState == "disconnected") {
-      document.querySelector('#remoteVideo').srcObject = null;
-    }
-  })
+  roomRef.collection('calleeCandidates').onSnapshot(snapshot => {
+    snapshot.docChanges().forEach(async change => {
+      if (change.type === 'removed') {
+        document.querySelector('#remoteVideo').srcObject = null;
+      }
+    });
+  });
+  // peerConnection.addEventListener("connectionstatechange", () =>{
+  //   if(peerConnection.connectionState == "disconnected") {
+  //     document.querySelector('#remoteVideo').srcObject = null;
+  //   }
+  // })
 }
 
 function joinRoom() {
@@ -267,14 +267,14 @@ async function calleehangUp(e) {
   document.querySelector('#currentRoom').innerText = '';
 
   // // Delete room on hangup
-  // if (roomId) {
-  //   const db = firebase.firestore();
-  //   const roomRef = db.collection('rooms').doc(roomId);
-  //   const calleeCandidates = await roomRef.collection('calleeCandidates').get();
-  //   calleeCandidates.forEach(async candidate => {
-  //     await candidate.ref.delete();
-  //   });
-  // }
+  if (roomId) {
+    const db = firebase.firestore();
+    const roomRef = db.collection('rooms').doc(roomId);
+    const calleeCandidates = await roomRef.collection('calleeCandidates').get();
+    calleeCandidates.forEach(async candidate => {
+      await candidate.ref.delete();
+    });
+  }
   //   const callerCandidates = await roomRef.collection('callerCandidates').get();
   //   callerCandidates.forEach(async candidate => {
   //     await candidate.ref.delete();
