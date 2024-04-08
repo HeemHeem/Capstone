@@ -20,7 +20,8 @@ let roomId = null;
 
 function init() {
   document.querySelector('#cameraBtn').addEventListener('click', openUserMedia);
-  document.querySelector('#hangupBtn').addEventListener('click', hangUp);
+  document.querySelector('#calleehangupBtn').addEventListener('click', calleehangUp);
+  document.querySelector('#callerhangupBtn').addEventListener('click', callerhangUp);
   document.querySelector('#createBtn').addEventListener('click', createRoom);
   document.querySelector('#joinBtn').addEventListener('click', joinRoom);
   roomDialog = new mdc.dialog.MDCDialog(document.querySelector('#room-dialog'));
@@ -41,8 +42,11 @@ async function turnOffPeerCamera(){
 
 
 async function createRoom() {
+
   document.querySelector('#createBtn').disabled = true;
   document.querySelector('#joinBtn').disabled = true;
+  document.querySelector('#callerhangupBtn').disabled = false;
+
   const db = firebase.firestore();
   const roomRef = await db.collection('rooms').doc("Telephone");
 
@@ -79,6 +83,7 @@ async function createRoom() {
       sdp: offer.sdp,
     },
   };
+
   await roomRef.set(roomWithOffer);
   roomId = roomRef.id;
   console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
@@ -119,19 +124,24 @@ async function createRoom() {
 
 
 // Turn off remote stream when callee disconnects
-  roomRef.collection('calleeCandidates').onSnapshot(snapshot => {
-    snapshot.docChanges().forEach(async change => {
-      if (change.type === 'removed') {
-        document.querySelector('#remoteVideo').srcObject = null;
-      }
-    });
-  });
-
+  // roomRef.collection('calleeCandidates').onSnapshot(snapshot => {
+  //   snapshot.docChanges().forEach(async change => {
+  //     if (change.type === 'removed') {
+  //       document.querySelector('#remoteVideo').srcObject = null;
+  //     }
+  //   });
+  // });
+  peerConnection.addEventListener("connectionstatechange", () =>{
+    if(peerConnection.connectionState == "disconnected") {
+      document.querySelector('#remoteVideo').srcObject = null;
+    }
+  })
 }
 
 function joinRoom() {
   document.querySelector('#createBtn').disabled = true;
   document.querySelector('#joinBtn').disabled = true;
+  document.querySelector('#calleehangupBtn').disabled = false;
 
   document.querySelector('#confirmJoinBtn').
       addEventListener('click', async () => {
@@ -232,7 +242,7 @@ async function openUserMedia(e) {
   document.querySelector('#hangupBtn').disabled = false;
 }
 
-async function hangUp(e) {
+async function calleehangUp(e) {
   const tracks = document.querySelector('#localVideo').srcObject.getTracks();
   tracks.forEach(track => {
     track.stop();
@@ -252,7 +262,52 @@ async function hangUp(e) {
   document.querySelector('#cameraBtn').disabled = false;
   document.querySelector('#joinBtn').disabled = true;
   document.querySelector('#createBtn').disabled = true;
-  document.querySelector('#hangupBtn').disabled = true;
+  document.querySelector('#calleehangupBtn').disabled = true;
+  document.querySelector('#callerhangupBtn').disabled = true;
+  document.querySelector('#currentRoom').innerText = '';
+
+  // // Delete room on hangup
+  // if (roomId) {
+  //   const db = firebase.firestore();
+  //   const roomRef = db.collection('rooms').doc(roomId);
+  //   const calleeCandidates = await roomRef.collection('calleeCandidates').get();
+  //   calleeCandidates.forEach(async candidate => {
+  //     await candidate.ref.delete();
+  //   });
+  // }
+  //   const callerCandidates = await roomRef.collection('callerCandidates').get();
+  //   callerCandidates.forEach(async candidate => {
+  //     await candidate.ref.delete();
+  //   });
+  //   await roomRef.delete();
+  // }
+
+  // document.location.reload(true);
+}
+
+
+async function callerhangUp(e) {
+  const tracks = document.querySelector('#localVideo').srcObject.getTracks();
+  tracks.forEach(track => {
+    track.stop();
+  });
+
+  if (remoteStream) {
+    remoteStream.getTracks().forEach(track => track.stop());
+    // document.querySelector('#remoteVideo').srcObject=null;
+  }
+
+  if (peerConnection) {
+    peerConnection.close();
+  }
+
+  document.querySelector('#localVideo').srcObject = null;
+  document.querySelector('#remoteVideo').srcObject = null;
+  document.querySelector('#cameraBtn').disabled = false;
+  document.querySelector('#joinBtn').disabled = true;
+  document.querySelector('#createBtn').disabled = true;
+  document.querySelector('#callerhangupBtn').disabled = true;
+  document.querySelector('#calleehangupBtn').disabled = true;
   document.querySelector('#currentRoom').innerText = '';
 
   // Delete room on hangup
@@ -272,6 +327,9 @@ async function hangUp(e) {
 
   document.location.reload(true);
 }
+
+
+
 
 function registerPeerConnectionListeners() {
   peerConnection.addEventListener('icegatheringstatechange', () => {
