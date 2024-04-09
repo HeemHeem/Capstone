@@ -1,0 +1,35 @@
+{
+    "dialogue": {
+        "system": "rhasspy"
+    },
+    "handle": {
+        "system": "command",
+	"command": {
+		"program": "python3 ./piper/pass_on.py",
+		"arguments": []
+	}
+    },
+    "intent": {
+        "system": "fsticuffs"
+    },
+    "microphone": {
+        "system": "pyaudio"
+    },
+    "sounds": {
+        "aplay": {
+            "device": "hw:2,0"
+        },
+        "system": "aplay"
+    },
+    "speech_to_text": {
+        "system": "kaldi"
+    },
+    "text_to_speech": {
+        "command": "/home/piper/piper --model /home/piper/voice_models/en_US-ryan-high.onnx",
+        "language": "en",
+        "system": "command"
+    },
+    "audio": {
+        "device": "hw:2,0"
+    }
+}
