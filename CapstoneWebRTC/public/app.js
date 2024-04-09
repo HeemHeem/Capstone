@@ -240,8 +240,8 @@ async function openUserMedia(e) {
   document.querySelector('#cameraBtn').disabled = true;
   document.querySelector('#joinBtn').disabled = false;
   document.querySelector('#createBtn').disabled = false;
-  document.querySelector('#calleehangupBtn').disabled = false;
-  document.querySelector('#callerhangupBtn').disabled = false;
+  document.querySelector('#calleehangupBtn').disabled = true;
+  document.querySelector('#callerhangupBtn').disabled = true;
 
 }
 
