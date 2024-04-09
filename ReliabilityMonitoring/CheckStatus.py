@@ -20,8 +20,13 @@ def send_status_to_client(status):
 
 
 if __name__ == "__main__":
-    while True:
-        send_status_to_client("connected")
-        time.sleep(TIMER_DURATION)
+    # Continuously send status to client and then wait specified time
+    try:
+        while True:
+            send_status_to_client("connected")
+            time.sleep(TIMER_DURATION)
+    # if a keyboard interrupt occurs then the status updates end
+    except KeyboardInterrupt:
+        print("User ended status updates.")
 
 
