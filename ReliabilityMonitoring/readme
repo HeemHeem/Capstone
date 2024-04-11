@@ -1,0 +1,38 @@
+Reliability Monitoring System
+Description
+
+The Reliability Monitoring System is a server-client application designed to monitor the uptime of a target device and notify users in case of downtime. The system consists of a server component that listens for status updates from the device and a client component that receives notifications and alerts users accordingly.
+Features
+
+    Device Monitoring: Continuously monitors the status of the target device to detect instances of downtime.
+    Alerting Mechanism: Sends alerts to designated users when the device is offline.
+    Logging: Records instances of downtime and relevant data for analysis and reporting purposes.
+    Network Redundancy: Includes a network redundancy subsystem to maintain uninterrupted service in case of network failures.
+
+Components
+
+    Server: Implemented using Python's http.server module, the server listens for POST requests from the device and processes them to update the device's status.
+    Client: Implemented using Python's requests library, the client periodically sends status updates to the server and receives notifications in case of downtime.
+    Monitoring Module: Implements the monitoring logic to continuously check the device's status.
+    Alerting Module: Handles the alerting mechanism to notify users of downtime.
+    Logging Module: Records downtime instances and relevant data for analysis and reporting.
+
+Setup
+
+    Clone the repository to your local machine.
+    Navigate to the project directory.
+    Install the required dependencies using pip install -r requirements.txt.
+    Configure the server and client settings as needed (e.g., server IP address, port).
+    Run the server using python3 AlertingModule.py.
+    Run the client (on the pi) using python3 MonitoringModule.py.
+
+Usage
+
+    Start the server component to begin listening for incoming status updates from the device.
+    Start the client component to periodically send status updates to the server.
+    Monitor the server console for notifications and alerts regarding the device's status.
+    Analyze the logged data for downtime instances and performance metrics.
+
+Contributors
+
+    Andre Coutu
