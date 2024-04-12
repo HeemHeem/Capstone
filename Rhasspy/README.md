@@ -6,5 +6,5 @@ Once everything is downloaded ensure system has docker installed with\
 curl -sSL https://get.docker.com | sh\
 Followed by\
 sudo usermod -a -G docker $USER\
-To add current user to the docker group. Restart your system to enact these changes./
+To add current user to the docker group. Restart your system to enact these changes.
 Finally, call ./docker_rebuild.sh to build Rhasspy docker container, which runs immediately in the background. The GUI for customizing Rhasspy is loacated at localhost:12101 on any web browser while the container is running.
